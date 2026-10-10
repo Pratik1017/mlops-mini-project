@@ -33,7 +33,7 @@ mlflow.set_tracking_uri(
     "https://dagshub.com/Pratik1017/mlops-mini-project.mlflow"
 )
 
-mlflow.set_experiment("RandomForest_Hyperparameter_Tuning")
+mlflow.set_experiment("LogisticRegression_Hyperparameter_Tuning")
 
 
 # 3. Define hyperparameter grid
@@ -49,7 +49,7 @@ param_grid = {
 
 # 4. Create model
 model = RandomForestClassifier(
-    max_iter=1000,
+    n_estimators=100,
     random_state=42
 )
 
