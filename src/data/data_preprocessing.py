@@ -9,17 +9,16 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 
 # 1. File paths
-X_train = "data/processed/X_train_cleaned.csv"
-X_test = "data/processed/X_test_cleaned.csv"
-
+X_train = "data/processed/X_train.csv"
+X_test = "data/processed/X_test.csv"
 
 
 # 2. Load data
 def load_data():
-    X_train = pd.read_csv(X_train)
-    X_test = pd.read_csv(X_test)
+    X_train_df = pd.read_csv(X_train)
+    X_test_df = pd.read_csv(X_test)
 
-    return X_train, X_test
+    return X_train_df, X_test_df
 
 
 # 3. Create preprocessing pipeline
@@ -53,8 +52,12 @@ def create_preprocessor(X_train):
 
     return preprocessor
 
+
 import os
+
 output_path = os.path.join("data/external")
+os.makedirs(output_path, exist_ok=True)
+
 
 # 4. Preprocess data
 def preprocess_data():
@@ -80,16 +83,15 @@ def preprocess_data():
         X_test_array,
         columns=feature_names
     )
-    
 
     # 5. Save processed data
     X_train_processed.to_csv(
-        os.path.join(output_path,"X_train_processed.csv"),
+        os.path.join(output_path, "X_train_processed.csv"),
         index=False
     )
 
     X_test_processed.to_csv(
-        os.path.join(output_path,"X_test_processed.csv"),
+        os.path.join(output_path, "X_test_processed.csv"),
         index=False
     )
 

@@ -152,7 +152,8 @@ X_train, X_test, y_train, y_test = split(df)
 path_list = [X_train,X_test,y_train,y_test]
 
 import os
-output_path = os.path.join("data\processed")
+output_path = os.path.join("data/processed")
+os.makedirs(output_path, exist_ok=True)
 
 X_train.to_csv(os.path.join(output_path , "X_train.csv"),index=False)
 X_test.to_csv(os.path.join(output_path , "X_test.csv"),index=False)
