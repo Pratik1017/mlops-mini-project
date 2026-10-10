@@ -110,9 +110,11 @@ with mlflow.start_run(run_name="RandomForest_GridSearchCV"):
     mlflow.log_metrics(metrics)
 
     # 9. Log best model
+
     mlflow.sklearn.log_model(
         best_model,
-        name="best_RandomForst"
+        name="best_random_forest",
+        skops_trusted_types=["sklearn.tree._tree.Tree"]
     )
 
     print("Test Metrics:", metrics)
