@@ -8,9 +8,6 @@ with open("params.yaml" , "r") as f:
 
 
 test_size = params['data_ingestion']['test_size']
-random_state = params['data_ingestion']['random_state']
-
-
 
 
 # data/raw/messy_customer_churn_2000.csv"
@@ -133,7 +130,7 @@ def split(df):
         X,
         y,
         test_size=test_size,
-        random_state=random_state,
+        random_state=42,
         stratify=y
     )
 

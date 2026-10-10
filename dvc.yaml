@@ -4,7 +4,6 @@ stages:
     deps:
     - src/data/data_ingestion.py
     params:
-    - data_ingestion.random_state
     - data_ingestion.test_size
     outs:
     - data/processed
