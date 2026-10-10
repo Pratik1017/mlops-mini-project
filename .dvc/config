@@ -1,5 +1,6 @@
 [core]
     remote = origin
+    autostage = true
 ['remote "origin"']
     url = https://dagshub.com/Pratik1017/mlops-mini-project.dvc
     auth = basic
