@@ -2,6 +2,7 @@ stages:
   data_ingestion:
     cmd: python src/data/data_ingestion.py
     deps:
+    - data/raw
     - src/data/data_ingestion.py
     params:
     - data_ingestion.test_size
@@ -10,6 +11,24 @@ stages:
   data_preprocessing:
     cmd: python src/data/data_preprocessing.py
     deps:
+    - data/processed
+    - data/raw
+    - src/data/data_ingestion.py
     - src/data/data_preprocessing.py
     outs:
     - data/external
+  models:
+    cmd: python src/models/model.py
+    deps:
+    - data/external
+    - data/processed
+    - data/raw
+    - src/data/data_ingestion.py
+    - src/data/data_preprocessing.py
+    - src/models/model.py
+    params:
+    - model.leraning_rate
+    - model.n_estimators
+    metrics:
+    - metrics.json:
+        cache: false
