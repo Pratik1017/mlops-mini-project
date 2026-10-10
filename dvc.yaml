@@ -27,7 +27,7 @@ stages:
     - src/data/data_preprocessing.py
     - src/models/model.py
     params:
-    - model.leraning_rate
+    - model.learning_rate
     - model.n_estimators
     metrics:
     - metrics.json:

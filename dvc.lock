@@ -48,3 +48,42 @@ stages:
       md5: a8b7fc3ac20309d2e682bb66c3defa21.dir
       size: 305010
       nfiles: 2
+  models:
+    cmd: python src/models/model.py
+    deps:
+    - path: data/external
+      hash: md5
+      md5: a8b7fc3ac20309d2e682bb66c3defa21.dir
+      size: 305010
+      nfiles: 2
+    - path: data/processed
+      hash: md5
+      md5: 49aa3135af9cb120a92fc2edf0eb7cf6.dir
+      size: 138404
+      nfiles: 4
+    - path: data/raw
+      hash: md5
+      md5: 93fb85f638f9bbebc179726d2036a013.dir
+      size: 152375
+      nfiles: 1
+    - path: src/data/data_ingestion.py
+      hash: md5
+      md5: 7b50cc1d578cfa5946cb8a417affc50a
+      size: 5315
+    - path: src/data/data_preprocessing.py
+      hash: md5
+      md5: 993b334aa31c332737883e97ab08074b
+      size: 2348
+    - path: src/models/model.py
+      hash: md5
+      md5: f1a4dbf89d0fb2aeb2a56d1d43c3bb30
+      size: 2040
+    params:
+      params.yaml:
+        model.learning_rate: 0.1
+        model.n_estimators: 100
+    outs:
+    - path: metrics.json
+      hash: md5
+      md5: 426ac27082082c4af868fb9276d80433
+      size: 84

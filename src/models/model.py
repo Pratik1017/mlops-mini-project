@@ -29,11 +29,15 @@ mlflow.set_tracking_uri(
 with open("params.yaml", "r") as f:
     params = yaml.safe_load(f)
 
-learning_rate = params["models"]["learning_rate"]
-n_estimators = params["models"]["n_estimators"]
+learning_rate = params["model"]["learning_rate"]
+n_estimators = params["model"]["n_estimators"]
+
+mlflow.set_experiment("GradientBoostingClassifier")
+
 
 # 4. Train model and track experiment
 with mlflow.start_run():
+
 
     clf = GradientBoostingClassifier(
         learning_rate=learning_rate,
@@ -54,7 +58,7 @@ with mlflow.start_run():
         )
     }
 
-    with open("metric.json","w") as f:
+    with open("metrics.json","w") as f:
         json.dump(metrics , f)
 
     # 6. Log parameters and metrics
@@ -64,10 +68,13 @@ with mlflow.start_run():
     mlflow.log_artifact(__file__)
 
     # 7. Log model
+    
     mlflow.sklearn.log_model(
         clf,
-        artifact_path="model"
+        name="model",
+        skops_trusted_types=["sklearn.tree._tree.Tree"]
     )
+
 
     print("Model training completed!")
     print("Metrics:", metrics)
