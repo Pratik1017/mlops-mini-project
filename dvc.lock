@@ -76,8 +76,8 @@ stages:
       size: 2348
     - path: src/models/model.py
       hash: md5
-      md5: f1a4dbf89d0fb2aeb2a56d1d43c3bb30
-      size: 2040
+      md5: 514990b05fdfc7b2eb023f310319be29
+      size: 3349
     params:
       params.yaml:
         model.learning_rate: 0.1
@@ -85,5 +85,5 @@ stages:
     outs:
     - path: metrics.json
       hash: md5
-      md5: 426ac27082082c4af868fb9276d80433
-      size: 84
+      md5: c488fac7401a462818e6f5e99ab079eb
+      size: 431
