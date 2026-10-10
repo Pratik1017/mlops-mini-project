@@ -1,8 +1,9 @@
 
 import pandas as pd
 import numpy as np
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_scorefrom sklearn.metrics import accuracy_score, precision_score, recall_score
 import mlflow
 import dagshub
 import yaml
@@ -32,49 +33,89 @@ with open("params.yaml", "r") as f:
 learning_rate = params["model"]["learning_rate"]
 n_estimators = params["model"]["n_estimators"]
 
-mlflow.set_experiment("GradientBoostingClassifier")
+models = {
+    "LogisticRegression": LogisticRegression(
+        max_iter=1000,
+        random_state=42
+    ),
 
+    "RandomForest": RandomForestClassifier(
+        n_estimators=n_estimators,
+        random_state=42
+    ),
 
-# 4. Train model and track experiment
-with mlflow.start_run():
-
-
-    clf = GradientBoostingClassifier(
+    "GradientBoosting": GradientBoostingClassifier(
         learning_rate=learning_rate,
-        n_estimators=n_estimators
+        n_estimators=n_estimators,
+        random_state=42
     )
+}
 
-    clf.fit(X_train, y_train)
-    y_pred = clf.predict(X_test)
+all_metrics = {}
 
-    # 5. Calculate metrics
-    metrics = {
-        "accuracy": accuracy_score(y_test, y_pred),
-        "precision": precision_score(
-            y_test, y_pred, zero_division=0
-        ),
-        "recall": recall_score(
-            y_test, y_pred, zero_division=0
-        )
-    }
+mlflow.set_experiment("Model_Comparison")
 
-    with open("metrics.json","w") as f:
-        json.dump(metrics , f)
+with mlflow.start_run(run_name="Multiple_Models_Comparison"):
 
-    # 6. Log parameters and metrics
-    mlflow.log_param("learning_rate", learning_rate)
-    mlflow.log_param("n_estimators", n_estimators)
-    mlflow.log_metrics(metrics)
-    mlflow.log_artifact(__file__)
+    for model_name, model in models.items():
 
-    # 7. Log model
-    
-    mlflow.sklearn.log_model(
-        clf,
-        name="model",
-        skops_trusted_types=["sklearn.tree._tree.Tree"]
-    )
+        # Nested child run for each model
+        with mlflow.start_run(
+            run_name=model_name,
+            nested=True
+        ):
+
+            # Train model
+            model.fit(X_train, y_train)
+
+            # Predictions
+            y_pred = model.predict(X_test)
+
+            # Calculate metrics
+            metrics = {
+                "accuracy": accuracy_score(y_test, y_pred),
+                "precision": precision_score(
+                    y_test, y_pred, zero_division=0
+                ),
+                "recall": recall_score(
+                    y_test, y_pred, zero_division=0
+                ),
+            }
+
+            # Log model parameters
+            mlflow.log_param("model_name", model_name)
+
+            if model_name == "GradientBoosting":
+                mlflow.log_param("learning_rate", learning_rate)
+
+            if model_name in ["RandomForest", "GradientBoosting"]:
+                mlflow.log_param("n_estimators", n_estimators)
+
+            # Log metrics
+            mlflow.log_metrics(metrics)
+
+            # Log Python script
+            mlflow.log_artifact(__file__)
+
+            # Log trained model
+            mlflow.sklearn.log_model(
+                model,
+                name="model",
+                skops_trusted_types=[
+                    "sklearn.tree._tree.Tree"
+                ]
+            )
+
+            # Store metrics for DVC
+            all_metrics[model_name] = metrics
+
+            print(f"\nModel: {model_name}")
+            print(f"Metrics: {metrics}")
 
 
-    print("Model training completed!")
-    print("Metrics:", metrics)
+# 7. Save all model metrics for DVC
+with open("metrics.json", "w") as f:
+    json.dump(all_metrics, f, indent=4)
+
+print("\nAll models trained successfully!")
+print("Metrics saved to metrics.json")
