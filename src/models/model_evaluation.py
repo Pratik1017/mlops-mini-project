@@ -4,7 +4,7 @@ import mlflow
 import mlflow.sklearn
 import dagshub
 
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV, StratifiedKFold
 from sklearn.metrics import (
     accuracy_score,
@@ -33,20 +33,22 @@ mlflow.set_tracking_uri(
     "https://dagshub.com/Pratik1017/mlops-mini-project.mlflow"
 )
 
-mlflow.set_experiment("LogisticRegression_Hyperparameter_Tuning")
+mlflow.set_experiment("RandomForest_Hyperparameter_Tuning")
 
 
 # 3. Define hyperparameter grid
 param_grid = {
-    "C": [0.01, 0.1, 1, 10, 100],
-    "penalty": ["l1", "l2"],
-    "solver": ["liblinear"],
+    "n_estimators": [100, 200],
+    "max_depth": [None, 10, 20],
+    "min_samples_split": [2, 5],
+    "min_samples_leaf": [1, 2],
+    "max_features": ["sqrt", 0.5],
     "class_weight": [None, "balanced"]
 }
 
 
 # 4. Create model
-model = LogisticRegression(
+model = RandomForestClassifier(
     max_iter=1000,
     random_state=42
 )
@@ -73,7 +75,7 @@ grid_search = GridSearchCV(
 
 
 # 7. Run experiment
-with mlflow.start_run(run_name="LogisticRegression_GridSearch"):
+with mlflow.start_run(run_name="RandomForest_GridSearchCV"):
 
     grid_search.fit(X_train, y_train)
 
@@ -110,7 +112,7 @@ with mlflow.start_run(run_name="LogisticRegression_GridSearch"):
     # 9. Log best model
     mlflow.sklearn.log_model(
         best_model,
-        name="best_logistic_regression"
+        name="best_RandomForst"
     )
 
     print("Test Metrics:", metrics)

@@ -32,3 +32,9 @@ stages:
     metrics:
     - metrics.json:
         cache: false
+  model_evaluation:
+    cmd: python src/models/model_evaluation.py
+    deps:
+    - data/external
+    - data/processed
+    - src/models/model_evaluation.py
