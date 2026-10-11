@@ -22,9 +22,15 @@ dagshub.init(
     mlflow=True
 )
 
-mlflow.set_tracking_uri(
-    "https://dagshub.com/Pratik1017/mlops-mini-project.mlflow"
-)
+import os
+import mlflow
+
+# 1. Credentials पर्यावरण व्हेरिएबल्समध्ये सेट करा
+os.environ["MLFLOW_TRACKING_USERNAME"] = "Pratik1017"
+os.environ["MLFLOW_TRACKING_PASSWORD"] = "a7e1c25c62f4e4acb65f036a48d53db69146d9ee"
+
+# 2. DagsHub चा MLflow Tracking URI सेट करा
+mlflow.set_tracking_uri("https://dagshub.com/Pratik1017/mlops-mini-project.mlflow")
 
 # 3. Load parameters
 with open("params.yaml", "r") as f:

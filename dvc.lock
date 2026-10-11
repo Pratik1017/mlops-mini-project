@@ -76,17 +76,17 @@ stages:
       size: 2348
     - path: src/models/model.py
       hash: md5
-      md5: 514990b05fdfc7b2eb023f310319be29
-      size: 3349
+      md5: 64c9adfd294b5e97f6e069ded01fe8c8
+      size: 3684
     params:
       params.yaml:
         model.learning_rate: 0.1
-        model.n_estimators: 100
+        model.n_estimators: 101
     outs:
     - path: metrics.json
       hash: md5
-      md5: c488fac7401a462818e6f5e99ab079eb
-      size: 431
+      md5: e2a45f83fb3c8aa68aadb7875ca8c9a8
+      size: 418
   model_evaluation:
     cmd: python src/models/model_evaluation.py
     deps:
@@ -102,5 +102,5 @@ stages:
       nfiles: 4
     - path: src/models/model_evaluation.py
       hash: md5
-      md5: 0517c07da222d5008dc1a6f4a2599fc2
-      size: 2748
+      md5: 8fab1613890a3df474271cc95dcabe03
+      size: 3085
